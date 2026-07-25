@@ -1,0 +1,30 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger: none
+
+pool:
+  name: Azure Pipelines
+
+stages:
+  - stage: printstage
+    jobs:
+        - job: 'printjob'
+          steps:
+             - script: echo Hello, world!
+#              displayName: 'printing hello world DN'
+             - script: mkdir -p  $(HOME)/.m2/repository
+               displayName: Create Maven repository DN
+
+#######################################################################################
+ 
+        - job: 'mavencachejob'
+          steps:
+            -  task: Cache@2
+               inputs:
+                  key: 'maven | "$(Agent.OS)" | **/pom.xml'
+                  restoreKeys: |
+                    maven | "$(Agent.OS)"
+                  path: $(HOME)/.m2/repository
